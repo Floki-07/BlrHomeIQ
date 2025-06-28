@@ -2,7 +2,7 @@
 
 # 🏡 BLRHomeIQ
 
-**BLRHomeIQ** is a web-based house price prediction app specifically designed for Bangalore. Using a trained **Linear Regression model**, the app estimates property prices based on location, size (in square feet), number of bedrooms, and bathrooms. 
+**BLRHomeIQ** is a web-based house price prediction app specifically designed for Bangalore. Using a trained **Linear Regression model**, the app estimates property prices based on location, size (in square feet), number of bedrooms, and bathrooms and much more. 
 
 ---
 
@@ -33,6 +33,17 @@
 4. The prediction is returned and shown on the webpage.
 
 ---
+
+## 📸  Screenshots
+🔷 1. **Home Page** - Input Form
+Users enter the location, sqft, number of BHK, and bathrooms etc. 
+![Screenshot (169)](https://github.com/user-attachments/assets/9997e274-e35b-40cb-bfa5-d0bebde2f3e8)
+
+
+
+🔷 2. **Prediction Result**
+The app displays the predicted house price after submission.
+![Screenshot (170)](https://github.com/user-attachments/assets/5cc23055-44e3-45f8-b9f9-602d92544c43)
 
 ## 📁 Project Structure
 
@@ -96,3 +107,7 @@ You can deploy this app using:
 * 🤖 Try advanced ML models like XGBoost or Random Forest
 
 ---
+## 🙌 Credits
+
+Dataset: Bangalore House Data – Kaggle
+https://www.kaggle.com/datasets
