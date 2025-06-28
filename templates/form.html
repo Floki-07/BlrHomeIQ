@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>House Price Prediction</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+      width: 100%;
+      max-width: 600px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #2c3e50;
+      font-size: 2rem;
+      font-weight: 700;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      position: relative;
+    }
+
+    label {
+      font-weight: 600;
+      color: #34495e;
+      margin-bottom: 0.5rem;
+      display: block;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid #e0e6ed;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: #f8f9fa;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #667eea;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      transform: translateY(-2px);
+    }
+
+    input[type="text"]::placeholder {
+      color: #95a5a6;
+      font-style: italic;
+    }
+
+    .submit-container {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    input[type="submit"] {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1rem 3rem;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+      min-width: 200px;
+    }
+
+    input[type="submit"]:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+    }
+
+    input[type="submit"]:active {
+      transform: translateY(-1px);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #e0e6ed;
+      color: #7f8c8d;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      .container {
+        padding: 1.5rem;
+        border-radius: 15px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      input[type="text"] {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+      }
+
+      input[type="submit"] {
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
+        min-width: 180px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 1rem;
+      }
+
+      h2 {
+        font-size: 1.3rem;
+      }
+
+      input[type="submit"] {
+        width: 100%;
+        min-width: auto;
+      }
+    }
+
+    /* Additional visual enhancements */
+    .form-group::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #667eea, transparent);
+      border-radius: 1px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .form-group:focus-within::before {
+      opacity: 1;
+    }
+
+    /* Subtle animations */
+    .form-group {
+      transition: transform 0.2s ease;
+    }
+
+    .form-group:hover {
+      transform: translateY(-1px);
+    }
+
+    /* Autocomplete Styling */
+    .autocomplete-container {
+      position: relative;
+    }
+
+    .autocomplete-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 2px solid #e0e6ed;
+      border-radius: 12px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 1000;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      display: none;
+      margin-top: 4px;
+    }
+
+    .autocomplete-dropdown.show {
+      display: block;
+      animation: dropdownSlide 0.3s ease-out;
+    }
+
+    @keyframes dropdownSlide {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .autocomplete-item {
+      padding: 0.8rem 1rem;
+      cursor: pointer;
+      border-bottom: 1px solid #f0f0f0;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+      color: #34495e;
+    }
+
+    .autocomplete-item:hover,
+    .autocomplete-item.highlighted {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    .autocomplete-item:first-child {
+      border-radius: 10px 10px 0 0;
+    }
+
+    .autocomplete-item:last-child {
+      border-bottom: none;
+      border-radius: 0 0 10px 10px;
+    }
+
+    .no-results {
+      padding: 1rem;
+      text-align: center;
+      color: #95a5a6;
+      font-style: italic;
+      font-size: 0.9rem;
+    }
+
+    /* Scrollbar styling for dropdown */
+    .autocomplete-dropdown::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .autocomplete-dropdown::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+
+    .autocomplete-dropdown::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 10px;
+    }
+
+    .autocomplete-dropdown::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🏠 House Price Prediction</h2>
+    <form action="/predict" method="post">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Location</label>
+          <div class="autocomplete-container">
+            <input type="text" name="location" id="locationInput" placeholder="e.g. Whitefield" autocomplete="off">
+            <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Total Area (in sqft)</label>
+          <input type="text" name="total_sqft" placeholder="e.g. 1200">
+        </div>
+
+        <div class="form-group">
+          <label>Bathrooms</label>
+          <input type="text" name="bath" placeholder="e.g. 2">
+        </div>
+
+        <div class="form-group">
+          <label>Balconies</label>
+          <input type="text" name="balcony" placeholder="e.g. 1">
+        </div>
+
+        <div class="form-group">
+          <label>BHK</label>
+          <input type="text" name="BHK" placeholder="e.g. 2">
+        </div>
+      </div>
+
+      <div class="submit-container">
+        <input type="submit" value="Predict Price">
+      </div>
+    </form>
+    <div class="footer">Created by NullPointers</div>
+  </div>
+
+  <script>
+    // List of all locations
+    const locations = [
+      "Whitefield", "Old Airport Road", "Rajaji Nagar", "Marathahalli", "Gandhi Bazar",
+      "7th Phase JP Nagar", "Gottigere", "Sarjapur", "Mysore Road", "Bisuvanahalli",
+      "Raja Rajeshwari Nagar", "Ramakrishnappa Layout", "Manayata Tech Park", "Kengeri",
+      "Binny Pete", "Thanisandra", "Bellandur", "Mangammanapalya", "Electronic City",
+      "Ramagondanahalli", "Yelahanka", "Hebbal", "Kasturi Nagar", "Kanakpura Road",
+      "Electronics City Phase 1", "Kundalahalli", "Chikkalasandra", "Uttarahalli",
+      "Murugeshpalya", "Sarjapur Road", "Ganga Nagar", "HSR Layout", "Doddathoguru",
+      "KR Puram", "Himagiri Meadows", "Adarsh Nagar", "Bhoganhalli", "Lakshminarayana Pura",
+      "Begur Road", "Devanahalli", "Govindaraja Nagar Ward", "Tharabanahalli", "Varthur",
+      "Bommanahalli", "Gunjur", "Devarachikkanahalli", "Double Road", "Hegde Nagar",
+      "Haralur Road", "Hennur Road", "Kothannur", "Kalena Agrahara", "Cholanayakanahalli",
+      "Kaval Byrasandra", "ISRO Layout", "Kodanda Reddy Layout", "Garudachar Palya",
+      "EPIP Zone", "Dasanapura", "Kasavanhalli", "Sanjay nagar", "Mysore Highway",
+      "Domlur", "Sarjapura - Attibele Road", "Devasthanagalu", "T Dasarahalli",
+      "Yeshwanthpur", "Chandapura", "Kothanur", "Green View Layout", "Shantiniketan Layout",
+      "Peenya", "Nagarbhavi", "Jalahalli West", "Lakshmiamma Garden", "Byatarayanapura",
+      "Ramamurthy Nagar", "Malleshwaram", "Akshaya Nagar", "Shampura", "Kadugodi",
+      "LB Shastri Nagar", "Vajarahalli", "Hormavu", "Vishwapriya Layout", "Ramaswamy Palya - Kammanahalli Main Road",
+      "Kudlu Gate", "8th Phase JP Nagar", "Bommasandra Industrial Area", "Chandra Layout",
+      "Satellite Town", "Basavanapura", "Dinnur", "Kannamangala", "Sanjeevini Nagar",
+      "Hulimavu", "Electronic City Phase II", "Mahalakshmi Layout", "Yarandahalli",
+      "Hosa Road", "Keshava Nagar", "RMV Extension", "Tejaswini Nagar", "Jai Bheema Nagar",
+      "Kothnur", "Narayanapura", "Attibele", "CV Raman Nagar", "CHIKKATIRUPATHI",
+      "Kumaraswami Layout", "Nagavara", "Kempapura", "Vijayanagar", "8th block Koramangala",
+      "Jakkuru Layout", "Pattandur Agrahara", "Ejipura", "MS Pallya", "Nagasandra",
+      "Langford Town", "Kogilu", "Anandapura", "Vishveshwarya Layout"
+    ];
+
+    // Remove duplicates and sort alphabetically
+    const uniqueLocations = [...new Set(locations)].sort();
+
+    // DOM elements
+    const locationInput = document.getElementById('locationInput');
+    const dropdown = document.getElementById('autocompleteDropdown');
+
+    let currentFocus = -1;
+
+    // Function to filter locations based on input
+    function filterLocations(input) {
+      return uniqueLocations.filter(location =>
+        location.toLowerCase().includes(input.toLowerCase())
+      );
+    }
+
+    // Function to create dropdown items
+    function createDropdownItems(filteredLocations) {
+      dropdown.innerHTML = '';
+      
+      if (filteredLocations.length === 0) {
+        const noResultsDiv = document.createElement('div');
+        noResultsDiv.className = 'no-results';
+        noResultsDiv.textContent = 'No locations found';
+        dropdown.appendChild(noResultsDiv);
+        return;
+      }
+
+      filteredLocations.slice(0, 8).forEach((location, index) => {
+        const item = document.createElement('div');
+        item.className = 'autocomplete-item';
+        item.textContent = location;
+        item.onclick = () => selectLocation(location);
+        dropdown.appendChild(item);
+      });
+    }
+
+    // Function to select a location
+    function selectLocation(location) {
+      locationInput.value = location;
+      hideDropdown();
+      currentFocus = -1;
+    }
+
+    // Function to show dropdown
+    function showDropdown() {
+      dropdown.classList.add('show');
+    }
+
+    // Function to hide dropdown
+    function hideDropdown() {
+      dropdown.classList.remove('show');
+    }
+
+    // Function to highlight item
+    function highlightItem(index) {
+      const items = dropdown.querySelectorAll('.autocomplete-item');
+      items.forEach((item, i) => {
+        item.classList.toggle('highlighted', i === index);
+      });
+    }
+
+    // Event listeners
+    locationInput.addEventListener('input', function() {
+      const inputValue = this.value.trim();
+      
+      if (inputValue.length === 0) {
+        hideDropdown();
+        return;
+      }
+
+      const filteredLocations = filterLocations(inputValue);
+      createDropdownItems(filteredLocations);
+      showDropdown();
+      currentFocus = -1;
+    });
+
+    locationInput.addEventListener('keydown', function(e) {
+      const items = dropdown.querySelectorAll('.autocomplete-item');
+      
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        currentFocus = Math.min(currentFocus + 1, items.length - 1);
+        highlightItem(currentFocus);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        currentFocus = Math.max(currentFocus - 1, -1);
+        highlightItem(currentFocus);
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (currentFocus >= 0 && items[currentFocus]) {
+          selectLocation(items[currentFocus].textContent);
+        }
+      } else if (e.key === 'Escape') {
+        hideDropdown();
+        currentFocus = -1;
+      }
+    });
+
+    locationInput.addEventListener('focus', function() {
+      const inputValue = this.value.trim();
+      if (inputValue.length > 0) {
+        const filteredLocations = filterLocations(inputValue);
+        createDropdownItems(filteredLocations);
+        showDropdown();
+      }
+    });
+
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.autocomplete-container')) {
+        hideDropdown();
+        currentFocus = -1;
+      }
+    });
+
+    // Prevent form submission when Enter is pressed on highlighted item
+    document.querySelector('form').addEventListener('submit', function(e) {
+      if (currentFocus >= 0) {
+        e.preventDefault();
+        const items = dropdown.querySelectorAll('.autocomplete-item');
+        if (items[currentFocus]) {
+          selectLocation(items[currentFocus].textContent);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
