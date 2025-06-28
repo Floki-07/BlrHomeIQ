@@ -37,13 +37,14 @@
 ## 📸  Screenshots
 🔷 1. **Home Page** - Input Form
 Users enter the location, sqft, number of BHK, and bathrooms etc. 
-![Screenshot (169)](https://github.com/user-attachments/assets/9997e274-e35b-40cb-bfa5-d0bebde2f3e8)
+![Screenshot (174)](https://github.com/user-attachments/assets/d6fd0c8e-0699-4398-bb4b-668a18185db0)
+
 
 
 
 🔷 2. **Prediction Result**
 The app displays the predicted house price after submission.
-![Screenshot (170)](https://github.com/user-attachments/assets/5cc23055-44e3-45f8-b9f9-602d92544c43)
+![Screenshot (173)](https://github.com/user-attachments/assets/9f35ac31-072d-43f1-92f0-f620925f8623)
 
 ## 📁 Project Structure
 
